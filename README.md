@@ -1,4 +1,4 @@
-# Karls Optimizely Analyzers
+# Karls Optimizely Analyzers ![CI workflow](https://github.com/karl-sjogren/optimizely-analyzers/actions/workflows/dotnet.yml/badge.svg)
 
 ## Analyzers
 
