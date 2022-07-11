@@ -11,6 +11,6 @@ public static class DiagnosticRules {
             defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: false,
             description: null,
-            helpLinkUri: "https://github.com/karl-sjogren/optimizely-analyzers/" + DiagnosticIdentifiers.PropertyOrderShouldMatchSourceOrder, // TODO Make better
+            helpLinkUri: "https://github.com/karl-sjogren/optimizely-analyzers#" + DiagnosticIdentifiers.PropertyOrderShouldMatchSourceOrder.ToLowerInvariant(),
             customTags: Array.Empty<string>());
 }

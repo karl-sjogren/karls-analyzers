@@ -2,7 +2,7 @@
 
 ## Analyzers
 
-### SH001
+### SO001
 
 Properties on content types should have matching sort and source order. Will only analyze
 classes with an attribute named "ContentType".
