@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{81852DD1-9916-433C-81B9-6C2BF1E70F51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Optimizely.Analyzers", "src\Shorthand.Optimizely.Analyzers\Shorthand.Optimizely.Analyzers.csproj", "{43D65F4B-1250-4C8B-B487-0839E018D679}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{49CF0F22-F03E-4EB2-BCD2-C0F62B7703C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Optimizely.Analyzers.Tests", "test\Shorthand.Optimizely.Analyzers.Tests\Shorthand.Optimizely.Analyzers.Tests.csproj", "{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43D65F4B-1250-4C8B-B487-0839E018D679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43D65F4B-1250-4C8B-B487-0839E018D679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43D65F4B-1250-4C8B-B487-0839E018D679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43D65F4B-1250-4C8B-B487-0839E018D679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{43D65F4B-1250-4C8B-B487-0839E018D679} = {81852DD1-9916-433C-81B9-6C2BF1E70F51}
+		{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09} = {49CF0F22-F03E-4EB2-BCD2-C0F62B7703C8}
+	EndGlobalSection
+EndGlobal
