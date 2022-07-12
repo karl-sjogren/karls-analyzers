@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Karls.Analyzers;
+namespace Karls.Analyzers.Optimizely;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
@@ -13,7 +13,7 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics {
         get {
             if(_supportedDiagnostics.IsDefault)
-                ImmutableInterlocked.InterlockedInitialize(ref _supportedDiagnostics, ImmutableArray.Create(DiagnosticRules.PropertyOrderShouldMatchSourceOrder));
+                ImmutableInterlocked.InterlockedInitialize(ref _supportedDiagnostics, ImmutableArray.Create(DiagnosticRules.OptimizelyPropertyOrderShouldMatchSourceOrder));
 
             return _supportedDiagnostics;
         }
@@ -44,22 +44,21 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
     private static void AnalyzeClassProperties(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax node) {
         var properties = node.Members.OfType<PropertyDeclarationSyntax>();
 
-        var propertyOrders = properties
+        var propertiesWithOrder = properties
             .Where(HasDiplayAttribute)
-            .Select(x => new PropertyOrder(GetDisplayOrder(x), x))
+            .Select(x => new PropertyWithOrder(GetDisplayOrder(x), x))
             .ToArray();
 
-        var unorderedProperty = GetFirstUnorderedProperty(propertyOrders);
+        var unorderedProperty = GetFirstUnorderedProperty(propertiesWithOrder);
         if(unorderedProperty == null)
             return;
 
         context.ReportDiagnostic(Diagnostic.Create(
-            descriptor: DiagnosticRules.PropertyOrderShouldMatchSourceOrder,
-            location: unorderedProperty.GetLocation(),
-            messageArgs: "Put properties in correct order."));
+            descriptor: DiagnosticRules.OptimizelyPropertyOrderShouldMatchSourceOrder,
+            location: unorderedProperty.GetLocation()));
     }
 
-    private static PropertyDeclarationSyntax? GetFirstUnorderedProperty(PropertyOrder[] propertyOrders) {
+    private static PropertyDeclarationSyntax? GetFirstUnorderedProperty(PropertyWithOrder[] propertyOrders) {
         for(var i = 0; i < propertyOrders.Length - 1; i++) {
             if(propertyOrders[i].Order > propertyOrders[i + 1].Order)
                 return propertyOrders[i].PropertyDeclaration;
@@ -72,7 +71,7 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         return GetDiplayAttribute(node) != null;
     }
 
-    private static Int32? GetDisplayOrder(PropertyDeclarationSyntax node) {
+    private static int? GetDisplayOrder(PropertyDeclarationSyntax node) {
         var attribute = GetDiplayAttribute(node);
         if(attribute == null)
             return null;
@@ -81,7 +80,7 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         if(constant == null)
             return null;
 
-        return Int32.Parse(constant.Token.ValueText);
+        return int.Parse(constant.Token.ValueText);
     }
 
     private static LiteralExpressionSyntax? GetAttributeArgumentValue(AttributeArgumentSyntax node, string argumentName) {
@@ -110,13 +109,13 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         return attributeList.Attributes.FirstOrDefault(a => a.Name.ToString() == "Display");
     }
 
-    private record PropertyOrder {
-        public PropertyOrder(Int32? order, PropertyDeclarationSyntax propertyDeclaration) {
+    private record PropertyWithOrder {
+        public PropertyWithOrder(int? order, PropertyDeclarationSyntax propertyDeclaration) {
             Order = order;
             PropertyDeclaration = propertyDeclaration;
         }
 
-        public Int32? Order { get; }
+        public int? Order { get; }
         public PropertyDeclarationSyntax PropertyDeclaration { get; }
     }
 }
