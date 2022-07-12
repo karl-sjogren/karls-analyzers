@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis;
 
-namespace Shorthand.Optimizely.Analyzers;
+namespace Karls.Analyzers;
 
 public static class DiagnosticRules {
     public static readonly DiagnosticDescriptor PropertyOrderShouldMatchSourceOrder = new(
@@ -11,6 +11,6 @@ public static class DiagnosticRules {
             defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: false,
             description: null,
-            helpLinkUri: "https://github.com/karl-sjogren/optimizely-analyzers#" + DiagnosticIdentifiers.PropertyOrderShouldMatchSourceOrder.ToLowerInvariant(),
+            helpLinkUri: $"https://github.com/karl-sjogren/karls-analyzers/blob/master/docs/analyzers/{DiagnosticIdentifiers.PropertyOrderShouldMatchSourceOrder}.md",
             customTags: Array.Empty<string>());
 }

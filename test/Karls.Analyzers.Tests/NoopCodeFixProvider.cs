@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 
-namespace Shorthand.Optimizely.Analyzers.Tests;
+namespace Karls.Analyzers.Tests;
 
 public class NoopCodeFixProvider : CodeFixProvider {
     public override ImmutableArray<string> FixableDiagnosticIds => throw new NotSupportedException();

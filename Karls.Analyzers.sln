@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{81852DD1-9916-433C-81B9-6C2BF1E70F51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Optimizely.Analyzers", "src\Shorthand.Optimizely.Analyzers\Shorthand.Optimizely.Analyzers.csproj", "{43D65F4B-1250-4C8B-B487-0839E018D679}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karls.Analyzers", "src\Karls.Analyzers\Karls.Analyzers.csproj", "{43D65F4B-1250-4C8B-B487-0839E018D679}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{49CF0F22-F03E-4EB2-BCD2-C0F62B7703C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shorthand.Optimizely.Analyzers.Tests", "test\Shorthand.Optimizely.Analyzers.Tests\Shorthand.Optimizely.Analyzers.Tests.csproj", "{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karls.Analyzers.Tests", "test\Karls.Analyzers.Tests\Karls.Analyzers.Tests.csproj", "{B5E1468A-D4E6-4C17-AD61-7643D0B9ED09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

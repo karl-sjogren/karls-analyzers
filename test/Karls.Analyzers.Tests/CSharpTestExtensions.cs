@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Roslynator.Testing;
 using Roslynator.Testing.CSharp;
 
-namespace Shorthand.Optimizely.Analyzers.Tests;
+namespace Karls.Analyzers.Tests;
 
 public static class CSharpTestExtensions {
     public static CSharpTestOptions AddConfigOption(this CSharpTestOptions options, string key, string value) {

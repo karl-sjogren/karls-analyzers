@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Shorthand.Optimizely.Analyzers\Shorthand.Optimizely.Analyzers.csproj" />
+    <ProjectReference Include="..\..\src\Karls.Analyzers\Karls.Analyzers.csproj" />
   </ItemGroup>
 
 </Project>

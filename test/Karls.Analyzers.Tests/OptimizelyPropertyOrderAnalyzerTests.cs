@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.Testing.CSharp;
 using Roslynator.Testing.CSharp.Xunit;
 
-namespace Shorthand.Optimizely.Analyzers.Tests;
+namespace Karls.Analyzers.Tests;
 
 public class OptimizelyPropertyOrderAnalyzerTests : XunitDiagnosticVerifier<OptimizelyPropertyOrderAnalyzer, NoopCodeFixProvider> {
     public override CSharpTestOptions Options => CSharpTestOptions.Default
