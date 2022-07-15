@@ -1,8 +1,8 @@
 using Karls.Analyzers.BePolite;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.Testing.CSharp;
 using Roslynator.Testing.CSharp.Xunit;
+
+using VerifyCS = Karls.Analyzers.Tests.RoslynUtils.CSharpAnalyzerVerifier<Karls.Analyzers.BePolite.PoliteCodeAnalyzer>;
 
 namespace Karls.Analyzers.Tests.BePolite;
 
@@ -60,5 +60,62 @@ public enum NiceEnum {
 }
 
 ".ToDiagnosticsData(Descriptor));
+    }
+
+    [Fact]
+    public async Task ShouldReportCustomWordFromAdditionalFileAsync() {
+        var test = new VerifyCS.Test {
+            TestState =
+            {
+                Sources = { @"
+public class {|#0:DonkeyComponent|} {
+}
+
+" },
+                AdditionalFiles = { ("PoliteCode.txt", "Donkey") }
+            }
+        };
+
+        test.ExpectedDiagnostics.Add(VerifyCS.Diagnostic(Descriptor.Id).WithLocation(0).WithArguments("DonkeyComponent"));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task ShouldNotHaveDefaultWordsIfCustomWordsAreLoadedAsync() {
+        var test = new VerifyCS.Test {
+            TestState =
+            {
+                Sources = { @"
+public class StupidComponent {
+}
+
+" },
+                AdditionalFiles = { ("PoliteCode.txt", "Donkey") }
+            }
+        };
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task ShouldReportCustomWordsFromMultipleAdditionalFilesAsync() {
+        var test = new VerifyCS.Test {
+            TestState =
+            {
+                Sources = { @"
+public class {|#0:DonkeyComponent|} {
+}
+
+public class {|#1:KorkadKomponent|} {
+}
+
+" },
+                AdditionalFiles = { ("PoliteCode.txt", "Donkey"), ("PoliteCode.Swedish.txt", "Korkad") }
+            }
+        };
+
+        test.ExpectedDiagnostics.Add(VerifyCS.Diagnostic(Descriptor.Id).WithLocation(0).WithArguments("DonkeyComponent"));
+        test.ExpectedDiagnostics.Add(VerifyCS.Diagnostic(Descriptor.Id).WithLocation(1).WithArguments("KorkadKomponent"));
+        await test.RunAsync();
     }
 }

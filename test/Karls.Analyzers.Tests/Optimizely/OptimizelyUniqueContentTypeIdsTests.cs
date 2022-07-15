@@ -1,6 +1,4 @@
 using Karls.Analyzers.Optimizely;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.Testing.CSharp;
 
 namespace Karls.Analyzers.Tests.Optimizely;

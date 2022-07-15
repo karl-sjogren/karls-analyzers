@@ -107,11 +107,11 @@ public abstract class PoliteCodeAnalyzerBase : DiagnosticAnalyzer {
         foreach(var textLine in lines) {
             var line = textLine.ToString();
             var parts = line.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-            if(parts.Length < 2)
+            if(parts.Length < 1)
                 continue;
 
             var term = parts[0];
-            var allReplacements = parts[1];
+            var allReplacements = parts.Length > 1 ? parts[1] : string.Empty;
             var replacements = allReplacements?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
             result.Add(new TermWithReplacements(term, replacements));
         }
