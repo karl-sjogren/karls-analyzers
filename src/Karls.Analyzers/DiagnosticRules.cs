@@ -1,5 +1,3 @@
-using Microsoft.CodeAnalysis;
-
 namespace Karls.Analyzers;
 
 public static class DiagnosticRules {
@@ -25,6 +23,32 @@ public static class DiagnosticRules {
             isEnabledByDefault: false,
             description: null,
             helpLinkUri: GetHelpUrl(DiagnosticIdentifiers.OptimizelyUniqueContentTypeIds),
+            customTags: Array.Empty<string>());
+
+    #endregion
+
+    #region Be Polite
+
+    public static readonly DiagnosticDescriptor PoliteCodeMakesEveryoneHappier = new(
+            id: DiagnosticIdentifiers.PoliteCodeMakesEveryoneHappier,
+            title: "Identifiers and comments should not contain impolite or degrading words or sentences.",
+            messageFormat: "The word {0} is considered impolite or degrading. Consider renaming/rewriting the affected symbol or comment to be more polite.",
+            category: "BePolite",
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: false,
+            description: null,
+            helpLinkUri: GetHelpUrl(DiagnosticIdentifiers.PoliteCodeMakesEveryoneHappier),
+            customTags: Array.Empty<string>());
+
+    public static readonly DiagnosticDescriptor InclusiveCodeMakesEveryoneHappier = new(
+            id: DiagnosticIdentifiers.InclusiveCodeMakesEveryoneHappier,
+            title: "Identifiers and comments should not contain non-inclusive words or sentences.",
+            messageFormat: "The word {0} is not considered inclusive. Consider switching it to a more inclusive word such as {1}.",
+            category: "BePolite",
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: false,
+            description: null,
+            helpLinkUri: GetHelpUrl(DiagnosticIdentifiers.InclusiveCodeMakesEveryoneHappier),
             customTags: Array.Empty<string>());
 
     #endregion

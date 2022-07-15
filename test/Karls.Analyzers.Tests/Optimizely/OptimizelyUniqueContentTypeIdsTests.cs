@@ -2,11 +2,10 @@ using Karls.Analyzers.Optimizely;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Roslynator.Testing.CSharp;
-using Roslynator.Testing.CSharp.Xunit;
 
 namespace Karls.Analyzers.Tests.Optimizely;
 
-public class OptimizelyUniqueContentTypeIdsTests : XunitDiagnosticVerifier<OptimizelyUniqueContentTypeIds, NoopCodeFixProvider> {
+public class OptimizelyUniqueContentTypeIdsTests : OptimizelyAnalyzerTestBase<OptimizelyUniqueContentTypeIds, NoopCodeFixProvider> {
     public override CSharpTestOptions Options => CSharpTestOptions.Default
         .WithParseOptions(CSharpTestOptions.Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp10));
 
@@ -15,14 +14,6 @@ public class OptimizelyUniqueContentTypeIdsTests : XunitDiagnosticVerifier<Optim
     [Fact]
     public async Task MultipleContentTypesWithSameIdsInSameFileShouldReportAsync() {
         await VerifyDiagnosticAsync(@"
-using System;
-using System.ComponentModel.DataAnnotations;
-
-[AttributeUsage(AttributeTargets.Class)]
-public class ContentTypeAttribute : Attribute {
-    public string GUID { get; set; }
-}
-
 [|[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
 public class Block1 {
 }|]
@@ -31,7 +22,7 @@ public class Block1 {
 public class Block2 {
 }|]
 
-".ToDiagnosticsData(Descriptor));
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
     }
 
     [Fact(Skip = "I can't get this working with diagnostics being reported in AdditionalFiles.")]
@@ -42,32 +33,16 @@ public class Block2 {
 }
 ";
         await VerifyDiagnosticAsync(@"
-using System;
-using System.ComponentModel.DataAnnotations;
-
-[AttributeUsage(AttributeTargets.Class)]
-public class ContentTypeAttribute : Attribute {
-    public string GUID { get; set; }
-}
-
 [|[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
 public class Block1 {
 }|]
 
-".ToDiagnosticsData(Descriptor, new[] { secondaryCode }));
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode, secondaryCode));
     }
 
     [Fact]
     public async Task MultipleContentTypesWithDifferentIdsInSameFileShouldNotReportAsync() {
         await VerifyNoDiagnosticAsync(@"
-using System;
-using System.ComponentModel.DataAnnotations;
-
-[AttributeUsage(AttributeTargets.Class)]
-public class ContentTypeAttribute : Attribute {
-    public string GUID { get; set; }
-}
-
 [ContentType(GUID = ""00000000-0000-0000-0000-000000000001"")]
 public class Block1 {
 }
@@ -76,6 +51,6 @@ public class Block1 {
 public class Block2 {
 }
 
-".ToDiagnosticsData(Descriptor));
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
     }
 }

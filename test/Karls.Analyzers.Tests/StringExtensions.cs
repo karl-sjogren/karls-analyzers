@@ -6,7 +6,7 @@ using Roslynator.Testing;
 namespace Karls.Analyzers.Tests;
 
 public static class StringExtensions {
-    public static DiagnosticTestData ToDiagnosticsData(this string source, DiagnosticDescriptor descriptor, IEnumerable<string> additionalCode = null) {
+    public static DiagnosticTestData ToDiagnosticsData(this string source, DiagnosticDescriptor descriptor, params string[] additionalCode) {
         var code = TestCode.Parse(source);
 
         var additionalFiles = additionalCode?.Select(c => new AdditionalFile(c)) ?? Enumerable.Empty<AdditionalFile>();
