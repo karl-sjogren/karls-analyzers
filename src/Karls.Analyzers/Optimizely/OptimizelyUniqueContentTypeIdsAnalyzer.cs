@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 namespace Karls.Analyzers.Optimizely;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class OptimizelyUniqueContentTypeIds : DiagnosticAnalyzer {
+public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer {
     private static ImmutableArray<DiagnosticDescriptor> _supportedDiagnostics;
 
     private static readonly ConcurrentDictionary<string, List<Location>> _identifierLocations = new();

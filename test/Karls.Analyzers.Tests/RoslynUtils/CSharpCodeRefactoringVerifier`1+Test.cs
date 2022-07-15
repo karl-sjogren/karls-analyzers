@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CodeRefactorings;
+﻿// Code from the Visual Studio analyzer project
+
+using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 

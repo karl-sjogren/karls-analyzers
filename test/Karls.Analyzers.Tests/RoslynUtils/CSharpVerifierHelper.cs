@@ -1,4 +1,6 @@
-﻿namespace Karls.Analyzers.Tests.RoslynUtils;
+﻿// Code from the Visual Studio analyzer project
+
+namespace Karls.Analyzers.Tests.RoslynUtils;
 
 internal static class CSharpVerifierHelper {
     /// <summary>
