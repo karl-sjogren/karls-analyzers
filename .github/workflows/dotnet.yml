@@ -2,7 +2,6 @@ name: .NET
 
 env:
   DOTNET_NOLOGO: 1
-  VERSION_SUFFIX: "{now.month}-{now.day}-{now.hour}-{now.minute}"
 
 on:
   push:
@@ -13,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -43,12 +42,16 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
+    - name: Setup timestamp
+      id: timestamp
+      run: echo "::set-output name=value::$(date +'%Y-%m-%d-%H-%M-%S')"
+
     - name: Package release
-      run: dotnet pack --configuration Release --output artifacts --version-suffix $VERSION_SUFFIX
+      run: dotnet pack --configuration Release --output artifacts --version-suffix ${{ steps.timestamp.outputs.value }}
 
     - name: Setup nuget registry
       run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/karl.sjogren/index.json"
 
-    - name: Publish to nuget registry
-      run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+#    - name: Publish to nuget registry
+#      run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
 
