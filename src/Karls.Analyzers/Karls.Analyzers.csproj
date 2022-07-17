@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Roslynator.Core" Version="4.1.1" />
     <PackageReference Include="Roslynator.CSharp" Version="4.1.1" />
+    <PackageReference Include="Roslynator.CSharp.Workspaces" Version="4.1.1" />
   </ItemGroup>
 
 </Project>

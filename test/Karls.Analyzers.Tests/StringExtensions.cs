@@ -30,4 +30,10 @@ public static class StringExtensions {
 
         return data;
     }
+
+    public static ExpectedTestState ToExpectedTestState(this string source) {
+        var state = new ExpectedTestState(source);
+
+        return state;
+    }
 }

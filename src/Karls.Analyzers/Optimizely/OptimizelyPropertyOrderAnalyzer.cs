@@ -25,25 +25,9 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         if(node == null)
             return;
 
-        var attributes = node.AttributeLists;
-        if(attributes.Count == 0)
-            return;
+        var properties = GetOptimizelyPropertiesFromClass(node);
 
-        if(!attributes.Any(a => a.Attributes.Any(a => a.Name.ToString() == "ContentType")))
-            return;
-
-        AnalyzeClassProperties(context, node);
-    }
-
-    private static void AnalyzeClassProperties(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax node) {
-        var properties = node.Members.OfType<PropertyDeclarationSyntax>();
-
-        var propertiesWithOrder = properties
-            .Where(HasDiplayAttribute)
-            .Select(x => new PropertyWithOrder(GetDisplayOrder(x), x))
-            .ToArray();
-
-        var unorderedProperty = GetFirstUnorderedProperty(propertiesWithOrder);
+        var unorderedProperty = GetFirstUnorderedProperty(properties);
         if(unorderedProperty == null)
             return;
 
@@ -52,7 +36,27 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
             location: unorderedProperty.GetLocation()));
     }
 
-    private static PropertyDeclarationSyntax? GetFirstUnorderedProperty(PropertyWithOrder[] propertyOrders) {
+    internal static PropertyWithOrder[] GetOptimizelyPropertiesFromClass(ClassDeclarationSyntax node) {
+        var attributes = node.AttributeLists;
+        if(attributes.Count == 0)
+            return Array.Empty<PropertyWithOrder>();
+
+        if(!attributes.Any(a => a.Attributes.Any(a => a.Name.ToString() == "ContentType")))
+            return Array.Empty<PropertyWithOrder>();
+
+        return GetOptimizelyPropertiesFromClassProperties(node);
+    }
+
+    private static PropertyWithOrder[] GetOptimizelyPropertiesFromClassProperties(ClassDeclarationSyntax node) {
+        var properties = node.Members.OfType<PropertyDeclarationSyntax>();
+
+        return properties
+            .Where(HasDiplayAttribute)
+            .Select(x => new PropertyWithOrder(GetDisplayOrder(x), x))
+            .ToArray();
+    }
+
+    internal static PropertyDeclarationSyntax? GetFirstUnorderedProperty(PropertyWithOrder[] propertyOrders) {
         for(var i = 0; i < propertyOrders.Length - 1; i++) {
             if(propertyOrders[i].Order > propertyOrders[i + 1].Order)
                 return propertyOrders[i].PropertyDeclaration;
@@ -103,7 +107,7 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         return attributeList.Attributes.FirstOrDefault(a => a.Name.ToString() == "Display");
     }
 
-    private record PropertyWithOrder {
+    internal record PropertyWithOrder {
         public PropertyWithOrder(int? order, PropertyDeclarationSyntax propertyDeclaration) {
             Order = order;
             PropertyDeclaration = propertyDeclaration;
