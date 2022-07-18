@@ -27,6 +27,36 @@ public class Block {
     }
 
     [Fact]
+    public async Task RealExampleWithTonsOfAttributeArgumentsAndStuffAsync() {
+        await VerifyDiagnosticAsync(@"
+using System.ComponentModel.DataAnnotations;
+
+[ContentType(
+    DisplayName = ""Button block"",
+    GUID = ""65878547-af59-4a12-8fc2-47d2d1b86d65"",
+    Description = ""A block with a button."")]
+public class ButtonBlock : BlockData {
+    [|[CultureSpecific]
+    [Display(
+      Name = ""Link"",
+      Description = ""The button link."",
+      GroupName = SystemTabNames.Content,
+      Order = 2)]
+    public virtual Url Link { get; set; }|]
+
+    [CultureSpecific]
+    [Display(
+      Name = ""Text"",
+      Description = ""The button text."",
+      GroupName = SystemTabNames.Content,
+      Order = 1)]
+    public virtual string StupidComponent { get; set; } = string.Empty;
+}
+
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+    }
+
+    [Fact]
     public async Task ShouldNotReportWhenClassIsContentTypeAndPropertiesAreInOrderAsync() {
         await VerifyNoDiagnosticAsync(@"
 using System.ComponentModel.DataAnnotations;

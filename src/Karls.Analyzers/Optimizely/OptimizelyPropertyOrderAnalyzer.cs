@@ -74,7 +74,7 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         if(attribute == null)
             return null;
 
-        var constant = attribute.ArgumentList?.Arguments.Select(x => GetAttributeArgumentValue(x, "Order")).FirstOrDefault();
+        var constant = attribute.ArgumentList?.Arguments.Select(x => GetAttributeArgumentValue(x, "Order")).Where(x => x != null).FirstOrDefault();
         if(constant == null)
             return null;
 
