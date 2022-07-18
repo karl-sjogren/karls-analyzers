@@ -29,14 +29,19 @@ public sealed class OptimizelyPropertyOrderCodeFixProvider : CodeFixProvider {
 
         var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
 
-        var title = "Order properties by display order";
-
-        var codeAction = CodeAction.Create(
-            title,
+        var reorderPropertiesCodeAction = CodeAction.Create(
+            "Order properties by display order",
             cancellationToken => RefactorAsync(context.Document, declaration, cancellationToken),
             equivalenceKey: "ReorderPropertiesByDisplayOrder");
 
-        context.RegisterCodeFix(codeAction, context.Diagnostics);
+        context.RegisterCodeFix(reorderPropertiesCodeAction, context.Diagnostics);
+
+        var updateDisplayOrderCodeAction = CodeAction.Create(
+            "Update display order to match property order",
+            cancellationToken => RefactorAsync(context.Document, declaration, cancellationToken), // TODO Implement another refactoring for this
+            equivalenceKey: "UpdateDisplayOrderToMatchPropertyOrder");
+
+        context.RegisterCodeFix(updateDisplayOrderCodeAction, context.Diagnostics);
     }
 
     public static async Task<Solution> RefactorAsync(
