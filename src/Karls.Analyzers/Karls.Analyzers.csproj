@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<RepositoryUrl>https://github.com/karl-sjogren/karls-analyzers/</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
