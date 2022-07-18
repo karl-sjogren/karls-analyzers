@@ -1,23 +1,34 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net5.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
 
-	<Authors>Karl-Johan Sjögren</Authors>
-	<RepositoryUrl>https://github.com/karl-sjogren/karls-analyzers/</RepositoryUrl>
-	<PackageTags>roslyn analyzer;optimizely</PackageTags>
-	<PackageDescription>CI release of the analyzers package. Always contains the latest code and fixes.
+    <Authors>Karl-Johan Sjögren</Authors>
+    <RepositoryUrl>https://github.com/karl-sjogren/karls-analyzers/</RepositoryUrl>
+    <PackageTags>roslyn analyzer;optimizely</PackageTags>
+    <PackageDescription>CI release of the analyzers package. Always contains the latest code and fixes.
 
 Install non-prerelease versions from https://www.nuget.org/ for production projects.</PackageDescription>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Roslynator.Core" Version="4.1.1" />
     <PackageReference Include="Roslynator.CSharp" Version="4.1.1" />
     <PackageReference Include="Roslynator.CSharp.Workspaces" Version="4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="..\..\tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="tools" />
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
