@@ -5,7 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<LangVersion>latest</LangVersion>
+
+	<Authors>Karl-Johan Sjögren</Authors>
 	<RepositoryUrl>https://github.com/karl-sjogren/karls-analyzers/</RepositoryUrl>
+	<PackageTags>roslyn analyzer;optimizely</PackageTags>
+	<PackageDescription>CI release of the analyzers package. Always contains the latest code and fixes.
+
+Install non-prerelease versions from https://www.nuget.org/ for production projects.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
