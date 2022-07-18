@@ -10,8 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  BuildAndPublish:
     runs-on: windows-latest
 
     steps:
