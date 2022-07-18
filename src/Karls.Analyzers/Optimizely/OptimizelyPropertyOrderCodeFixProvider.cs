@@ -1,9 +1,11 @@
+using System.Composition;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Roslynator.CSharp;
 
 namespace Karls.Analyzers.Optimizely;
 
+[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptimizelyPropertyOrderCodeFixProvider)), Shared]
 public sealed class OptimizelyPropertyOrderCodeFixProvider : CodeFixProvider {
     public override ImmutableArray<string> FixableDiagnosticIds {
         get { return ImmutableArray.Create(DiagnosticIdentifiers.OptimizelyPropertyOrderShouldMatchSourceOrder); }
