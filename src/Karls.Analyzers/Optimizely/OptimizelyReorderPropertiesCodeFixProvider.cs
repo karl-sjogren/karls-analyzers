@@ -5,8 +5,8 @@ using Roslynator.CSharp;
 
 namespace Karls.Analyzers.Optimizely;
 
-[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptimizelyPropertyOrderCodeFixProvider)), Shared]
-public sealed class OptimizelyPropertyOrderCodeFixProvider : CodeFixProvider {
+[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptimizelyReorderPropertiesCodeFixProvider)), Shared]
+public sealed class OptimizelyReorderPropertiesCodeFixProvider : CodeFixProvider {
     public override ImmutableArray<string> FixableDiagnosticIds {
         get { return ImmutableArray.Create(DiagnosticIdentifiers.OptimizelyPropertyOrderShouldMatchSourceOrder); }
     }
@@ -35,13 +35,6 @@ public sealed class OptimizelyPropertyOrderCodeFixProvider : CodeFixProvider {
             equivalenceKey: "ReorderPropertiesByDisplayOrder");
 
         context.RegisterCodeFix(reorderPropertiesCodeAction, context.Diagnostics);
-
-        var updateDisplayOrderCodeAction = CodeAction.Create(
-            "Update display order to match property order",
-            cancellationToken => RefactorAsync(context.Document, declaration, cancellationToken), // TODO Implement another refactoring for this
-            equivalenceKey: "UpdateDisplayOrderToMatchPropertyOrder");
-
-        context.RegisterCodeFix(updateDisplayOrderCodeAction, context.Diagnostics);
     }
 
     public static async Task<Solution> RefactorAsync(

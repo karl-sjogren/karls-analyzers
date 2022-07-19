@@ -92,7 +92,7 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         return node.Expression as LiteralExpressionSyntax;
     }
 
-    private static AttributeSyntax? GetDiplayAttribute(PropertyDeclarationSyntax node) {
+    internal static AttributeSyntax? GetDiplayAttribute(PropertyDeclarationSyntax node) {
         if(node == null)
             return null;
 

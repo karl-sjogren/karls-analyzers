@@ -31,8 +31,8 @@ public static class StringExtensions {
         return data;
     }
 
-    public static ExpectedTestState ToExpectedTestState(this string source) {
-        var state = new ExpectedTestState(source);
+    public static ExpectedTestState ToExpectedTestState(this string source, string codeActionTitle = null) {
+        var state = new ExpectedTestState(source, codeActionTitle);
 
         return state;
     }
