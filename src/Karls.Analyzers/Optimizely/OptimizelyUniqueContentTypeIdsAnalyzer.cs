@@ -93,7 +93,7 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
         if(attribute == null)
             return null;
 
-        var constant = attribute.ArgumentList?.Arguments.Select(x => GetAttributeArgumentValue(x, "GUID")).FirstOrDefault();
+        var constant = attribute.ArgumentList?.Arguments.Select(x => GetAttributeArgumentValue(x, "GUID")).Where(x => x != null).FirstOrDefault();
         if(constant == null)
             return null;
 

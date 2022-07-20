@@ -26,12 +26,12 @@ public class Block2 {
     [Fact(Skip = "I can't get this working with diagnostics being reported in AdditionalFiles.")]
     public async Task MultipleContentTypesWithSameIdsInDifferentFilesShouldReportAsync() {
         var secondaryCode = @"
-[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
+[ContentType(DisplayName = ""Block2"", GUID = ""00000000-0000-0000-0000-000000000000"")]
 public class Block2 {
 }
 ";
         await VerifyDiagnosticAsync(@"
-[|[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
+[|[ContentType(DisplayName = ""Block1"", GUID = ""00000000-0000-0000-0000-000000000000"")]
 public class Block1 {
 }|]
 
