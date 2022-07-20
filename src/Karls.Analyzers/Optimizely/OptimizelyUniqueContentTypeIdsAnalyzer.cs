@@ -21,7 +21,11 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
         context.EnableConcurrentExecution();
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
-        context.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
+        context.RegisterCompilationStartAction(compilationAnalysisContext => {
+            compilationAnalysisContext.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
+
+            compilationAnalysisContext.RegisterCompilationEndAction(_ => _identifierLocations.Clear());
+        });
     }
 
     private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context) {
