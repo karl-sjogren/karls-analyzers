@@ -40,7 +40,7 @@ public abstract class PoliteCodeAnalyzerBase : DiagnosticAnalyzer {
     }
 
     private static bool CheckIfContentContainAnyTerm(string content, TermWithReplacements[] terms) {
-        return terms.Any(t => content.Contains(t.Term, StringComparison.OrdinalIgnoreCase));
+        return terms.Any(t => content.IndexOf(t.Term, StringComparison.InvariantCultureIgnoreCase) >= 0);
     }
 
     private void AnalyzeSymbol(SymbolAnalysisContext context, AnalysisContext analysisContext) {
@@ -106,13 +106,13 @@ public abstract class PoliteCodeAnalyzerBase : DiagnosticAnalyzer {
         var result = new List<TermWithReplacements>();
         foreach(var textLine in lines) {
             var line = textLine.ToString();
-            var parts = line.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            var parts = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             if(parts.Length < 1)
                 continue;
 
             var term = parts[0];
             var allReplacements = parts.Length > 1 ? parts[1] : string.Empty;
-            var replacements = allReplacements?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+            var replacements = allReplacements?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
             result.Add(new TermWithReplacements(term, replacements));
         }
 
