@@ -1,7 +1,7 @@
 using System.Composition;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Roslynator.CSharp;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace Karls.Analyzers.Optimizely;
 
@@ -52,7 +52,7 @@ public sealed class OptimizelyReorderPropertiesCodeFixProvider : CodeFixProvider
         var firstProperty = orderedProperties.First();
 
         var newClassDeclaration = firstProperty.PropertyDeclaration.Ancestors().OfType<ClassDeclarationSyntax>().First();
-        newClassDeclaration = newClassDeclaration.InsertNodesBefore(newClassDeclaration.ChildNodes().OfType<PropertyDeclarationSyntax>().First(), orderedProperties.Select((x, index) => x.PropertyDeclaration.WithTriviaFrom(properties[index].PropertyDeclaration).WithFormatterAnnotation()));
+        newClassDeclaration = newClassDeclaration.InsertNodesBefore(newClassDeclaration.ChildNodes().OfType<PropertyDeclarationSyntax>().First(), orderedProperties.Select((x, index) => x.PropertyDeclaration.WithTriviaFrom(properties[index].PropertyDeclaration).WithAdditionalAnnotations(new[] { Formatter.Annotation })));
         newClassDeclaration = newClassDeclaration.RemoveNodes(newClassDeclaration.ChildNodes().OfType<PropertyDeclarationSyntax>().Skip(orderedProperties.Length), SyntaxRemoveOptions.KeepNoTrivia);
 
         var newRoot = root;
