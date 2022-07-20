@@ -13,6 +13,7 @@ public class OptimizelyPropertyOrderAnalyzerTests : OptimizelyAnalyzerTestBase<O
     public async Task ShouldReportWhenClassIsContentTypeAndPropertiesAreInWrongOrderAsync() {
         await VerifyDiagnosticAsync(@"
 using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
 
 [ContentType]
 public class Block {
@@ -30,6 +31,7 @@ public class Block {
     public async Task RealExampleWithTonsOfAttributeArgumentsAndStuffAsync() {
         await VerifyDiagnosticAsync(@"
 using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
 
 [ContentType(
     DisplayName = ""Button block"",
@@ -60,6 +62,7 @@ public class ButtonBlock : BlockData {
     public async Task ShouldNotReportWhenClassIsContentTypeAndPropertiesAreInOrderAsync() {
         await VerifyNoDiagnosticAsync(@"
 using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
 
 [ContentType]
 public class Block {
@@ -77,6 +80,7 @@ public class Block {
     public async Task ShouldNotReportWhenClassIsNotContentTypeAndPropertiesAreInWrongOrderAsync() {
         await VerifyNoDiagnosticAsync(@"
 using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
 
 public class Block {
     [Display(Order = 2)]

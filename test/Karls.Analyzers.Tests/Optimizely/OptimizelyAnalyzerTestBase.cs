@@ -11,15 +11,17 @@ public abstract class OptimizelyAnalyzerTestBase<TAnalyzer, TFixProvider> : Xuni
 using System;
 using System.ComponentModel.DataAnnotations;
 
-[AttributeUsage(AttributeTargets.Class)]
-public class ContentTypeAttribute : Attribute {
-    public string DisplayName { get; set; }
-    public string GUID { get; set; }
-    public string Description { get; set; }
-}
+namespace EPiServer.DataAnnotations {
+    [AttributeUsage(AttributeTargets.Class)]
+    public class ContentTypeAttribute : Attribute {
+        public string DisplayName { get; set; }
+        public string GUID { get; set; }
+        public string Description { get; set; }
+    }
 
-[AttributeUsage(AttributeTargets.Property)]
-public class CultureSpecificAttribute : Attribute {
+    [AttributeUsage(AttributeTargets.Property)]
+    public class CultureSpecificAttribute : Attribute {
+    }
 }
 
 public static class SystemTabNames {

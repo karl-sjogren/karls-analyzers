@@ -12,6 +12,8 @@ public class OptimizelyUniqueContentTypeIdsTests : OptimizelyAnalyzerTestBase<Op
     [Fact]
     public async Task MultipleContentTypesWithSameIdsInSameFileShouldReportAsync() {
         await VerifyDiagnosticAsync(@"
+using EPiServer.DataAnnotations;
+
 [|[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
 public class Block1 {
 }|]
@@ -26,11 +28,15 @@ public class Block2 {
     [Fact(Skip = "I can't get this working with diagnostics being reported in AdditionalFiles.")]
     public async Task MultipleContentTypesWithSameIdsInDifferentFilesShouldReportAsync() {
         var secondaryCode = @"
+using EPiServer.DataAnnotations;
+
 [ContentType(DisplayName = ""Block2"", GUID = ""00000000-0000-0000-0000-000000000000"")]
 public class Block2 {
 }
 ";
         await VerifyDiagnosticAsync(@"
+using EPiServer.DataAnnotations;
+
 [|[ContentType(DisplayName = ""Block1"", GUID = ""00000000-0000-0000-0000-000000000000"")]
 public class Block1 {
 }|]
@@ -41,6 +47,8 @@ public class Block1 {
     [Fact]
     public async Task MultipleContentTypesWithDifferentIdsInSameFileShouldNotReportAsync() {
         await VerifyNoDiagnosticAsync(@"
+using EPiServer.DataAnnotations;
+
 [ContentType(GUID = ""00000000-0000-0000-0000-000000000001"")]
 public class Block1 {
 }

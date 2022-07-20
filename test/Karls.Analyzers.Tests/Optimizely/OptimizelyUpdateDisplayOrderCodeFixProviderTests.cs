@@ -13,6 +13,7 @@ public class OptimizelyUpdateDisplayOrderCodeFixProviderTests : OptimizelyAnalyz
     public async Task ShouldUpdateDisplayOrderForPropertiesWithCodeFixAsync() {
         await VerifyDiagnosticAndFixAsync(@"
 using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
 
 [ContentType]
 public class Block {
@@ -25,6 +26,7 @@ public class Block {
 
 ".ToDiagnosticsData(Descriptor, OptimizelySetupCode), @"
 using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
 
 [ContentType]
 public class Block {

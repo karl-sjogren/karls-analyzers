@@ -1,5 +1,10 @@
 # Karls Analyzers ![CI workflow](https://github.com/karl-sjogren/karls-analyzers/actions/workflows/dotnet.yml/badge.svg)
 
+## Installing
+
+The analyzers are currently only available via the CI builds on Github. They will be published to the NuGet Gallery
+when they are ready for public consumption.
+
 ## Analyzers
 
 ### Optimizely
