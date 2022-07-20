@@ -6,8 +6,6 @@ namespace Karls.Analyzers.Optimizely;
 public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer {
     private static ImmutableArray<DiagnosticDescriptor> _supportedDiagnostics;
 
-    private static readonly ConcurrentDictionary<string, List<Location>> _identifierLocations = new();
-
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics {
         get {
             if(_supportedDiagnostics.IsDefault)
@@ -22,13 +20,23 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
         context.RegisterCompilationStartAction(compilationAnalysisContext => {
-            compilationAnalysisContext.RegisterSyntaxNodeAction(AnalyzeClassDeclaration, SyntaxKind.ClassDeclaration);
+            var identifierLocations = new ConcurrentDictionary<string, List<Location>>();
 
-            compilationAnalysisContext.RegisterCompilationEndAction(_ => _identifierLocations.Clear());
+            compilationAnalysisContext.RegisterSyntaxNodeAction(f => AnalyzeClassDeclaration(f, identifierLocations), SyntaxKind.ClassDeclaration);
+
+            compilationAnalysisContext.RegisterCompilationEndAction(endContext => {
+                foreach(var identifier in identifierLocations.Where(x => x.Value.Count > 1)) {
+                    foreach(var location in identifier.Value) {
+                        endContext.ReportDiagnostic(Diagnostic.Create(
+                            descriptor: DiagnosticRules.OptimizelyUniqueContentTypeIds,
+                            location: location));
+                    }
+                }
+            });
         });
     }
 
-    private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context) {
+    private static void AnalyzeClassDeclaration(SyntaxNodeAnalysisContext context, ConcurrentDictionary<string, List<Location>> identifierLocations) {
         var node = context.Node as ClassDeclarationSyntax;
         if(node == null)
             return;
@@ -41,9 +49,9 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
             return;
 
         List<Location>? locations;
-        lock(_identifierLocations) {
-            if(!_identifierLocations.TryGetValue(identifier, out locations)) {
-                _identifierLocations.TryAdd(identifier, new List<Location>() { node.GetLocation() });
+        lock(identifierLocations) {
+            if(!identifierLocations.TryGetValue(identifier, out locations)) {
+                identifierLocations.TryAdd(identifier, new List<Location>() { node.GetLocation() });
                 return;
             }
         }
@@ -54,18 +62,6 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
 
         lock(locations) {
             locations.Add(currentLocation);
-        }
-
-        context.ReportDiagnostic(Diagnostic.Create(
-            descriptor: DiagnosticRules.OptimizelyUniqueContentTypeIds,
-            location: node.GetLocation()));
-
-        // If this is the second one we find, then add a diagnostic for the first
-        // one as well.
-        if(locations.Count == 2) {
-            context.ReportDiagnostic(Diagnostic.Create(
-                descriptor: DiagnosticRules.OptimizelyUniqueContentTypeIds,
-                location: locations[0]));
         }
     }
 

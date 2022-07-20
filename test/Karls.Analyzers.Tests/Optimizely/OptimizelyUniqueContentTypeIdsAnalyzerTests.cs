@@ -3,7 +3,7 @@ using Roslynator.Testing.CSharp;
 
 namespace Karls.Analyzers.Tests.Optimizely;
 
-public class OptimizelyUniqueContentTypeIdsTests : OptimizelyAnalyzerTestBase<OptimizelyUniqueContentTypeIdsAnalyzer, NoopCodeFixProvider> {
+public class OptimizelyUniqueContentTypeIdsAnalyzerTests : OptimizelyAnalyzerTestBase<OptimizelyUniqueContentTypeIdsAnalyzer, NoopCodeFixProvider> {
     public override CSharpTestOptions Options => CSharpTestOptions.Default
         .WithParseOptions(CSharpTestOptions.Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp10));
 
