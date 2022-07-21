@@ -22,16 +22,10 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
         context.RegisterCompilationStartAction(compilationAnalysisContext => {
             var identifierLocations = new ConcurrentDictionary<string, List<Location>>();
 
-            compilationAnalysisContext.RegisterSyntaxNodeAction(context => {
-                try {
-                    AnalyzeClassDeclaration(context, identifierLocations);
-                } catch {
-                    // :(
-                }
-            }, SyntaxKind.ClassDeclaration);
+            compilationAnalysisContext.RegisterSyntaxNodeAction(f => AnalyzeClassDeclaration(f, identifierLocations), SyntaxKind.ClassDeclaration);
 
             compilationAnalysisContext.RegisterCompilationEndAction(endContext => {
-                try {
+                lock(identifierLocations) {
                     foreach(var identifier in identifierLocations.Where(x => x.Value.Count > 1)) {
                         foreach(var location in identifier.Value) {
                             endContext.ReportDiagnostic(Diagnostic.Create(
@@ -39,8 +33,6 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
                                 location: location));
                         }
                     }
-                } catch {
-                    // :(
                 }
             });
         });
@@ -54,19 +46,23 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
         if(!HasContentTypeAttribute(node))
             return;
 
-        var identifier = GetContentTypeId(node);
+        var identifier = GetContentTypeIdLiteral(node);
         if(identifier == null)
+            return;
+
+        var identifierText = identifier.Token.ValueText;
+        if(identifierText == null)
             return;
 
         List<Location>? locations;
         lock(identifierLocations) {
-            if(!identifierLocations.TryGetValue(identifier, out locations)) {
-                identifierLocations.TryAdd(identifier, new List<Location>() { node.GetLocation() });
+            if(!identifierLocations.TryGetValue(identifierText, out locations)) {
+                identifierLocations.TryAdd(identifierText, new List<Location>() { identifier.GetLocation() });
                 return;
             }
         }
 
-        var currentLocation = node.GetLocation();
+        var currentLocation = identifier.GetLocation();
         if(locations.Any(x => x == currentLocation))
             return;
 
@@ -94,16 +90,13 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
         return attributeList.Attributes.FirstOrDefault(a => a.Name.ToString() == "ContentType");
     }
 
-    private static string? GetContentTypeId(ClassDeclarationSyntax node) {
+    private static LiteralExpressionSyntax? GetContentTypeIdLiteral(ClassDeclarationSyntax node) {
         var attribute = GetContentTypeAttribute(node);
         if(attribute == null)
             return null;
 
         var constant = attribute.ArgumentList?.Arguments.Select(x => GetAttributeArgumentValue(x, "GUID")).Where(x => x != null).FirstOrDefault();
-        if(constant == null)
-            return null;
-
-        return constant.Token.ValueText;
+        return constant;
     }
 
     private static LiteralExpressionSyntax? GetAttributeArgumentValue(AttributeArgumentSyntax node, string argumentName) {

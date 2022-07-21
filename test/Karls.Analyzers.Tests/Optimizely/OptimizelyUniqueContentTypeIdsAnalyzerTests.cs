@@ -14,13 +14,13 @@ public class OptimizelyUniqueContentTypeIdsAnalyzerTests : OptimizelyAnalyzerTes
         await VerifyDiagnosticAsync(@"
 using EPiServer.DataAnnotations;
 
-[|[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
+[ContentType(GUID = [|""00000000-0000-0000-0000-000000000000""|])]
 public class Block1 {
-}|]
+}
 
-[|[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
+[ContentType(GUID = [|""00000000-0000-0000-0000-000000000000""|])]
 public class Block2 {
-}|]
+}
 
 ".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
     }
@@ -37,9 +37,9 @@ public class Block2 {
         await VerifyDiagnosticAsync(@"
 using EPiServer.DataAnnotations;
 
-[|[ContentType(DisplayName = ""Block1"", GUID = ""00000000-0000-0000-0000-000000000000"")]
+[ContentType(DisplayName = ""Block1"", GUID = [|""00000000-0000-0000-0000-000000000000""|])]
 public class Block1 {
-}|]
+}
 
 ".ToDiagnosticsData(Descriptor, OptimizelySetupCode, secondaryCode));
     }

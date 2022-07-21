@@ -19,7 +19,7 @@ public static class DiagnosticRules {
             title: "Content types need to have unique identifiers.",
             messageFormat: "Generate a new ID for the content type.",
             category: "Optimizely",
-            defaultSeverity: DiagnosticSeverity.Error,
+            defaultSeverity: DiagnosticSeverity.Warning,
             isEnabledByDefault: false,
             description: null,
             helpLinkUri: GetHelpUrl(DiagnosticIdentifiers.OptimizelyUniqueContentTypeIds),
