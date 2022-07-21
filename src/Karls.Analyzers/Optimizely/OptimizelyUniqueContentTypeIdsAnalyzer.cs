@@ -22,15 +22,25 @@ public sealed class OptimizelyUniqueContentTypeIdsAnalyzer : DiagnosticAnalyzer 
         context.RegisterCompilationStartAction(compilationAnalysisContext => {
             var identifierLocations = new ConcurrentDictionary<string, List<Location>>();
 
-            compilationAnalysisContext.RegisterSyntaxNodeAction(f => AnalyzeClassDeclaration(f, identifierLocations), SyntaxKind.ClassDeclaration);
+            compilationAnalysisContext.RegisterSyntaxNodeAction(context => {
+                try {
+                    AnalyzeClassDeclaration(context, identifierLocations);
+                } catch {
+                    // :(
+                }
+            }, SyntaxKind.ClassDeclaration);
 
             compilationAnalysisContext.RegisterCompilationEndAction(endContext => {
-                foreach(var identifier in identifierLocations.Where(x => x.Value.Count > 1)) {
-                    foreach(var location in identifier.Value) {
-                        endContext.ReportDiagnostic(Diagnostic.Create(
-                            descriptor: DiagnosticRules.OptimizelyUniqueContentTypeIds,
-                            location: location));
+                try {
+                    foreach(var identifier in identifierLocations.Where(x => x.Value.Count > 1)) {
+                        foreach(var location in identifier.Value) {
+                            endContext.ReportDiagnostic(Diagnostic.Create(
+                                descriptor: DiagnosticRules.OptimizelyUniqueContentTypeIds,
+                                location: location));
+                        }
                     }
+                } catch {
+                    // :(
                 }
             });
         });

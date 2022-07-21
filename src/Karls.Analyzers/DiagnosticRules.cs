@@ -53,5 +53,5 @@ public static class DiagnosticRules {
 
     #endregion
 
-    private static string GetHelpUrl(string diagnosticId) => $"https://github.com/karl-sjogren/karls-analyzers/blob/master/docs/analyzers/{diagnosticId}.md";
+    private static string GetHelpUrl(string diagnosticId) => $"https://github.com/karl-sjogren/karls-analyzers/blob/main/docs/analyzers/{diagnosticId}.md";
 }
