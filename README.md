@@ -6,6 +6,8 @@
 dotnet add package Karls.Analyzers
 ```
 
+Then enable the rules with a ruleset or editorconfig file.
+
 ## Analyzers
 
 ### Optimizely
