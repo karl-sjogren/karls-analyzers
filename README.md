@@ -9,20 +9,19 @@ when they are ready for public consumption.
 
 ### Optimizely
 
-| Id | Value | Title |
-| ------------------------------------ | -------- | ------------------------------------------------------------------------------------------- |
-| [KO0001](docs/analyzers/KO0001.md)   | KO0001   | Properties on content types should have matching sort and source order.                     |
-| [KO0002](docs/analyzers/KO0002.md)   | KO0002   | Content types need to have unique identifiers.                                              |
+| Id | Value | Code fix | Title |
+| ------------------------------------ | -------- | --- | ------------------------------------------------------------------------------------------- |
+| [KO0001](docs/analyzers/KO0001.md)   | KO0001   | Yes | Properties on content types should have matching sort and source order.                     |
+| [KO0002](docs/analyzers/KO0002.md)   | KO0002   | Yes | Content types need to have unique identifiers.                                              |
 
 ### Be polite
 
-| Id | Value | Title |
-| ------------------------------------ | -------- | ------------------------------------------------------------------------------------------- |
-| [KP0001](docs/analyzers/KP0001.md)   | KP0001   | Identifiers and comments should not contain impolite or degrading words or sentences.       |
+| Id | Value | Code fix | Title |
+| ------------------------------------ | -------- | --- | ------------------------------------------------------------------------------------------- |
+| [KP0001](docs/analyzers/KP0001.md)   | KP0001   | No  | Identifiers and comments should not contain impolite or degrading words or sentences.       |
 
 ## Attributions
 
-Based on [Roslynator](https://github.com/JosefPihrt/Roslynator) which made this quite
-easy to get going. If you want to write you own analyzers, check it out!
+Using test helpers from [Roslynator](https://github.com/JosefPihrt/Roslynator).
 
 "Be Polite" analyzers are inspired by [InclusivenessAnalyzer](https://github.com/merill/InclusivenessAnalyzer).
