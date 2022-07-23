@@ -27,8 +27,6 @@ public sealed class OptimizelyReorderPropertiesCodeFixProvider : CodeFixProvider
         if(declaration == null)
             return;
 
-        var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
-
         var reorderPropertiesCodeAction = CodeAction.Create(
             "Order properties by display order",
             cancellationToken => RefactorAsync(context.Document, declaration, cancellationToken),

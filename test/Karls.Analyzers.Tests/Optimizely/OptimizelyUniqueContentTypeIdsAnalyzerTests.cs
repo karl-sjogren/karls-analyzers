@@ -3,7 +3,7 @@ using Roslynator.Testing.CSharp;
 
 namespace Karls.Analyzers.Tests.Optimizely;
 
-public class OptimizelyUniqueContentTypeIdsAnalyzerTests : OptimizelyAnalyzerTestBase<OptimizelyUniqueContentTypeIdsAnalyzer, NoopCodeFixProvider> {
+public class OptimizelyUniqueContentTypeIdsAnalyzerTests : OptimizelyAnalyzerTestBase<OptimizelyUniqueContentTypeIdsAnalyzer, OptimizelyUpdateContentTypeIdCodeFixProvider> {
     public override CSharpTestOptions Options => CSharpTestOptions.Default
         .WithParseOptions(CSharpTestOptions.Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp10));
 
@@ -58,5 +58,33 @@ public class Block2 {
 }
 
 ".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+    }
+
+    [Fact]
+    public async Task MultipleContentTypesWithSameIdsInSameShouldUpdateWithCodeFixAsync() {
+        OptimizelyUpdateContentTypeIdCodeFixProvider.GuidGenerator = () => Guid.Parse("00000000-0000-0000-0000-000000000001");
+        await VerifyDiagnosticAndFixAsync(@"
+using EPiServer.DataAnnotations;
+
+[ContentType(GUID = [|""00000000-0000-0000-0000-000000000000""|])]
+public class Block1 {
+}
+
+[ContentType(GUID = [|""00000000-0000-0000-0000-000000000000""|])]
+public class Block2 {
+}
+
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode), @"
+using EPiServer.DataAnnotations;
+
+[ContentType(GUID = ""00000000-0000-0000-0000-000000000001"")]
+public class Block1 {
+}
+
+[ContentType(GUID = ""00000000-0000-0000-0000-000000000000"")]
+public class Block2 {
+}
+
+".ToExpectedTestState());
     }
 }
