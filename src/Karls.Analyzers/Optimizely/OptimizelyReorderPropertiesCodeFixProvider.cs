@@ -21,6 +21,11 @@ public sealed class OptimizelyReorderPropertiesCodeFixProvider : CodeFixProvider
             return;
 
         var diagnostic = context.Diagnostics.First();
+
+        diagnostic.Properties.TryGetValue("IsDuplicateOrder", out var isDuplicateOrderString);
+        if(isDuplicateOrderString == bool.TrueString)
+            return;
+
         var diagnosticSpan = diagnostic.Location.SourceSpan;
 
         var declaration = root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First();

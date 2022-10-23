@@ -28,6 +28,63 @@ public class Block {
     }
 
     [Fact]
+    public async Task ShouldReportWhenClassIsCustomContentTypeAndPropertiesAreInWrongOrderAsync() {
+        await VerifyDiagnosticAsync(@"
+using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
+
+[AwesomeContentType]
+public class Block {
+    [|[Display(Order = 2)]
+    public virtual string Prop2 { get; set; }|]
+
+    [Display(Order = 1)]
+    public virtual string Prop1 { get; set; }
+}
+
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+    }
+
+    [Fact]
+    public async Task ShouldReportWhenClassIsContentTypeAndPropertiesHaveSameOrderAsync() {
+        await VerifyDiagnosticAsync(@"
+using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
+
+[ContentType]
+public class Block {
+    [|[Display(Order = 1)]
+    public virtual string Prop1 { get; set; }|]
+
+    [Display(Order = 1)]
+    public virtual string Prop2 { get; set; }
+}
+
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+    }
+
+    [Fact]
+    public async Task ShouldReportWhenClassIsContentTypeAndPropertiesHaveSameOrderEvenIfNotNextToEachOtherAsync() {
+        await VerifyDiagnosticAsync(@"
+using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
+
+[ContentType]
+public class Block {
+    [|[Display(Order = 1)]
+    public virtual string Prop1 { get; set; }|]
+
+    [Display(Order = 2)]
+    public virtual string Prop2 { get; set; }
+
+    [Display(Order = 1)]
+    public virtual string Prop3 { get; set; }
+}
+
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+    }
+
+    [Fact]
     public async Task RealExampleWithTonsOfAttributeArgumentsAndStuffAsync() {
         await VerifyDiagnosticAsync(@"
 using System.ComponentModel.DataAnnotations;
@@ -52,7 +109,7 @@ public class ButtonBlock : BlockData {
       Description = ""The button text."",
       GroupName = SystemTabNames.Content,
       Order = 1)]
-    public virtual string StupidComponent { get; set; } = string.Empty;
+    public virtual string BadComponent { get; set; } = string.Empty;
 }
 
 ".ToDiagnosticsData(Descriptor, OptimizelySetupCode));

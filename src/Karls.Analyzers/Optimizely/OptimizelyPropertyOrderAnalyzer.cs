@@ -27,13 +27,17 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
 
         var properties = GetOptimizelyPropertiesFromClass(node);
 
-        var unorderedProperty = GetFirstUnorderedProperty(properties);
+        var (unorderedProperty, isDuplicateOrder) = GetFirstUnorderedProperty(properties);
         if(unorderedProperty == null)
             return;
 
         context.ReportDiagnostic(Diagnostic.Create(
             descriptor: DiagnosticRules.OptimizelyPropertyOrderShouldMatchSourceOrder,
-            location: unorderedProperty.GetLocation()));
+            location: unorderedProperty.GetLocation(),
+            properties: new Dictionary<string, string?> {
+                { "IsDuplicateOrder", isDuplicateOrder.ToString() }
+            }.ToImmutableDictionary()
+        ));
     }
 
     internal static PropertyWithOrder[] GetOptimizelyPropertiesFromClass(ClassDeclarationSyntax node) {
@@ -41,7 +45,7 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
         if(attributes.Count == 0)
             return Array.Empty<PropertyWithOrder>();
 
-        if(!attributes.Any(a => a.Attributes.Any(a => a.Name.ToString() == "ContentType")))
+        if(!attributes.Any(a => a.Attributes.Any(a => a.Name.ToString().EndsWith("ContentType"))))
             return Array.Empty<PropertyWithOrder>();
 
         return GetOptimizelyPropertiesFromClassProperties(node);
@@ -56,13 +60,23 @@ public sealed class OptimizelyPropertyOrderAnalyzer : DiagnosticAnalyzer {
             .ToArray();
     }
 
-    internal static PropertyDeclarationSyntax? GetFirstUnorderedProperty(PropertyWithOrder[] propertyOrders) {
+    internal static (PropertyDeclarationSyntax?, bool) GetFirstUnorderedProperty(PropertyWithOrder[] propertyOrders) {
         for(var i = 0; i < propertyOrders.Length - 1; i++) {
-            if(propertyOrders[i].Order > propertyOrders[i + 1].Order)
-                return propertyOrders[i].PropertyDeclaration;
+            var currentOrder = propertyOrders[i];
+            var hasDuplicateOrder = propertyOrders
+                .Except(new[] { currentOrder })
+                .Any(x => x.Order == currentOrder.Order);
+
+            if(hasDuplicateOrder)
+                return (currentOrder.PropertyDeclaration, true);
         }
 
-        return null;
+        for(var i = 0; i < propertyOrders.Length - 1; i++) {
+            if(propertyOrders[i].Order > propertyOrders[i + 1].Order)
+                return (propertyOrders[i].PropertyDeclaration, false);
+        }
+
+        return (null, false);
     }
 
     private static bool HasDiplayAttribute(PropertyDeclarationSyntax node) {

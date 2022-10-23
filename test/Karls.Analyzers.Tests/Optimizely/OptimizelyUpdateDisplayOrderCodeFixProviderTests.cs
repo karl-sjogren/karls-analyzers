@@ -39,4 +39,35 @@ public class Block {
 
 ".ToExpectedTestState());
     }
+
+    [Fact]
+    public async Task ShouldUpdateDisplayOrderForPropertiesWithSameOrderWithCodeFixAsync() {
+        await VerifyDiagnosticAndFixAsync(@"
+using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
+
+[ContentType]
+public class Block {
+    [|[Display(Order = 1)]
+    public virtual string Prop1 { get; set; }|]
+
+    [Display(Order = 1)]
+    public virtual string Prop2 { get; set; }
+}
+
+".ToDiagnosticsData(Descriptor, OptimizelySetupCode), @"
+using System.ComponentModel.DataAnnotations;
+using EPiServer.DataAnnotations;
+
+[ContentType]
+public class Block {
+    [Display(Order = 1)]
+    public virtual string Prop1 { get; set; }
+
+    [Display(Order = 2)]
+    public virtual string Prop2 { get; set; }
+}
+
+".ToExpectedTestState());
+    }
 }

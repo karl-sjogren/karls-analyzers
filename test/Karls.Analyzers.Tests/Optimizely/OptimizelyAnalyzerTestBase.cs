@@ -19,6 +19,10 @@ namespace EPiServer.DataAnnotations {
         public string Description { get; set; }
     }
 
+    [AttributeUsage(AttributeTargets.Class)]
+    public class AwesomeContentType : ContentTypeAttribute {
+    }
+
     [AttributeUsage(AttributeTargets.Property)]
     public class CultureSpecificAttribute : Attribute {
     }
