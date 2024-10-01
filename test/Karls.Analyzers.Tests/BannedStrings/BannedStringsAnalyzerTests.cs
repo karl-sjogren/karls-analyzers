@@ -143,6 +143,30 @@ public class MyClass {
     }
 
     [Fact]
+    public async Task ShouldLoadBannedStringsFromParentDirectoryIfNeededAsync() {
+        var test = new VerifyCS.Test {
+            TestState =
+            {
+                Sources = { """
+public class MyClass {
+    public void MyMethod() {
+        var myString = "DoNotUseMe";
+    }
+}
+
+""" },
+                AdditionalFiles = { ("../BannedStrings.txt", "DoNotUseMe;Constants.UseThisInstead") }
+            },
+            ExpectedDiagnostics =
+            {
+                VerifyCS.Diagnostic().WithSpan(3, 24, 3, 36).WithArguments("\"DoNotUseMe\"", "Constants.UseThisInstead")
+            }
+        };
+
+        await test.RunAsync();
+    }
+
+    [Fact]
     public async Task ShouldFindMultipleInstancesOfBannedStringsAsync() {
         var sb = new StringBuilder();
         sb.AppendLine("DoNotUseMe;Constants.UseThisInstead");

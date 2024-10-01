@@ -73,7 +73,7 @@ public abstract class PoliteCodeAnalyzerBase : DiagnosticAnalyzer {
 
     protected TermWithReplacements[] GetConfiguredTerms(AnalysisContext context, ImmutableArray<AdditionalText> additionalFiles) {
         var files = additionalFiles
-            .Where(text => text.Path.StartsWith(FilePrefix) && text.Path.EndsWith(".txt"));
+            .Where(text => Path.GetFileName(text.Path).StartsWith(FilePrefix) && Path.GetFileName(text.Path).EndsWith(".txt"));
 
         var terms = new List<TermWithReplacements>();
         foreach(var file in files) {

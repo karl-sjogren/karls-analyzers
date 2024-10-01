@@ -15,7 +15,7 @@ public static class DiagnosticIdentifiers {
 
     #endregion
 
-    #region Banend strings
+    #region Banned strings
 
     public const string UsePredefinedConstInsteadOfString = "KBS001";
 
