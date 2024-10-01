@@ -1,59 +1,115 @@
-name: .NET
-
-env:
-  DOTNET_NOLOGO: 1
+name: 'Build and publish application'
 
 on:
   push:
     branches:
+      - develop
       - main
+      - 'release/**'
+      - 'feature/**'
+      - 'hotfix/**'
     paths-ignore:
-      - '**/*.md'
+      - 'README.md'
+      - 'docs/*'
+      - 'scripts/*'
+      - '.vscode/*'
   pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - '**/*.md'
+
+permissions:
+  checks: write
+  contents: write
+  pull-requests: write
+  actions: read
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+  DOTNET_GENERATE_ASPNET_CERTIFICATE: false
+  NUGET_CERT_REVOCATION_MODE: offline
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
-  BuildAndPublish:
-    runs-on: windows-latest
+
+  net-build:
+    name: .NET build
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout sources
+      uses: actions/checkout@v4
 
-    - uses: actions/cache@v3
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
       with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+        global-json-file: global.json
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+    - name: Restore NuGet packages
+      run: dotnet restore --verbosity minimal
+
+    - name: Build opinionated solution
+      run: dotnet build templates/opinionated-solution/BASE_NAME.sln --configuration Release
+
+    - name: Pack template project
+      run: dotnet pack Karls.Templates.csproj --configuration Release --output artifacts
+
+    - name: Upload packages
+      uses: actions/upload-artifact@v4
       with:
-        dotnet-version: |
-          7.0.x
-        include-prerelease: true
+        name: packages
+        path: artifacts/*.nupkg
 
-    - name: Restore dependencies
-      run: dotnet restore
+  integration-tests:
+    name: Integration tests
+    needs: net-build
+    runs-on: ubuntu-latest
 
-    - name: Build
-      run: dotnet build --no-restore
+    strategy:
+      matrix:
+        type: [base, frontend, github]
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    steps:
+      # This is needed to pass linting
+      - name: Set GIT to use CRLF
+        run: |
+          git config --global core.autocrlf true
+          git config --global core.eol crlf
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - name: Checkout sources
+        uses: actions/checkout@v4
 
-    - name: Setup timestamp
-      id: timestamp
-      run: echo "::set-output name=value::$(date +'%Y-%m-%d-%H-%M-%S')"
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
 
-    - name: Package release
-      run: dotnet pack --configuration Release --output artifacts --version-suffix ${{ steps.timestamp.outputs.value }}
+      - name: Create ${{ matrix.type }} solution
+        run: ./test-install-${{ matrix.type }}.sh
+
+
+  publish-internal:
+    name: NuGet Publish
+    needs: integration-tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          global.json
+        sparse-checkout-cone-mode: false
+
+    - name: Download artiifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: packages
+        path: ./artifacts/
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: global.json
 
     - name: Setup nuget registry
       run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/karl-sjogren/index.json"
@@ -61,3 +117,33 @@ jobs:
     - name: Publish to nuget registry
       run: dotnet nuget push artifacts\*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
 
+  publish:
+    name: NuGet Publish
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          global.json
+        sparse-checkout-cone-mode: false
+
+    - name: Download artiifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: packages
+        path: ./artifacts/
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: global.json
+
+    - name: Publish package to NuGet.org
+      env:
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      run: dotnet nuget push artifacts/*.nupkg --api-key $NUGET_KEY --source https://api.nuget.org/v3/index.json
+      working-directory: ./
