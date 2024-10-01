@@ -75,6 +75,23 @@ public class Constants {
     }
 
     [Fact]
+    public async Task ShouldNotCrashWhenNoAdditionalFileIsPresentAsync() {
+        var test = new VerifyCS.Test {
+            TestState =
+            {
+                Sources = { """
+public class Constants {
+    public const string UseThisInstead = "DoNotUseMe";
+}
+
+""" },
+            }
+        };
+
+        await test.RunAsync();
+    }
+
+    [Fact]
     public async Task ShouldFixStringInPrivateFieldAsync() {
         var test = new VerifyFixCS.Test {
             TestState =
