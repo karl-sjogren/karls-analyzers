@@ -7,7 +7,7 @@ public class OptimizelyUpdateDisplayOrderCodeFixProviderTests : OptimizelyAnalyz
     public override CSharpTestOptions Options => CSharpTestOptions.Default
         .WithParseOptions(CSharpTestOptions.Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp10));
 
-    public DiagnosticDescriptor Descriptor { get; } = DiagnosticRules.OptimizelyPropertyOrderShouldMatchSourceOrder;
+    public override DiagnosticDescriptor Descriptor { get; } = DiagnosticRules.OptimizelyPropertyOrderShouldMatchSourceOrder;
 
     [Fact]
     public async Task ShouldUpdateDisplayOrderForPropertiesWithCodeFixAsync() {

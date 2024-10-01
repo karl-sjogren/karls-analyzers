@@ -5,17 +5,15 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 
-	<Title>Karls Analyzers</Title>
+    <Title>Karls Analyzers</Title>
     <Authors>Karl-Johan Sjögren</Authors>
     <RepositoryUrl>https://github.com/karl-sjogren/karls-analyzers/</RepositoryUrl>
-	<PackageProjectUrl>https://github.com/karl-sjogren/karls-analyzers/</PackageProjectUrl>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/karl-sjogren/karls-analyzers/</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>analyzer;optimizely</PackageTags>
     <PackageDescription Condition="'$(GITHUB_ACTIONS)'=='true'">CI release of the analyzers package. Always contains the latest code and fixes.
 
@@ -27,6 +25,14 @@ Install non-prerelease versions from https://www.nuget.org/ for production proje
   <ItemGroup>
     <None Update="..\..\tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="tools" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+    <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

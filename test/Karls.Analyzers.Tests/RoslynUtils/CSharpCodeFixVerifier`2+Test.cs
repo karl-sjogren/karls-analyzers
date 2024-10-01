@@ -3,14 +3,14 @@
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
+using Microsoft.CodeAnalysis.Testing;
 
 namespace Karls.Analyzers.Tests.RoslynUtils;
 
 public static partial class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
     where TAnalyzer : DiagnosticAnalyzer, new()
     where TCodeFix : CodeFixProvider, new() {
-    public class Test : CSharpCodeFixTest<TAnalyzer, TCodeFix, XUnitVerifier> {
+    public class Test : CSharpCodeFixTest<TAnalyzer, TCodeFix, DefaultVerifier> {
         public Test() {
             SolutionTransforms.Add((solution, projectId) => {
                 var compilationOptions = solution.GetProject(projectId).CompilationOptions;

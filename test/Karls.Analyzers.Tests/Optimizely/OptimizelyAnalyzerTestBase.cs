@@ -5,8 +5,8 @@ using Roslynator.Testing.CSharp.Xunit;
 namespace Karls.Analyzers.Tests.Optimizely;
 
 public abstract class OptimizelyAnalyzerTestBase<TAnalyzer, TFixProvider> : XunitDiagnosticVerifier<TAnalyzer, TFixProvider>
-    where TAnalyzer : DiagnosticAnalyzer, new()
-    where TFixProvider : CodeFixProvider, new() {
+        where TAnalyzer : DiagnosticAnalyzer, new()
+        where TFixProvider : CodeFixProvider, new() {
     public string OptimizelySetupCode { get; } = @"
 using System;
 using System.ComponentModel.DataAnnotations;

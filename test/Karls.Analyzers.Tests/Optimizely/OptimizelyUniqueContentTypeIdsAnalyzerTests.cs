@@ -7,7 +7,7 @@ public class OptimizelyUniqueContentTypeIdsAnalyzerTests : OptimizelyAnalyzerTes
     public override CSharpTestOptions Options => CSharpTestOptions.Default
         .WithParseOptions(CSharpTestOptions.Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp10));
 
-    public DiagnosticDescriptor Descriptor { get; } = DiagnosticRules.OptimizelyUniqueContentTypeIds;
+    public override DiagnosticDescriptor Descriptor { get; } = DiagnosticRules.OptimizelyUniqueContentTypeIds;
 
     [Fact]
     public async Task MultipleContentTypesWithSameIdsInSameFileShouldReportAsync() {

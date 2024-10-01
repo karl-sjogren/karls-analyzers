@@ -11,7 +11,7 @@ public class PoliteCodeAnalyzerTests : XunitDiagnosticVerifier<PoliteCodeAnalyze
         .WithParseOptions(CSharpTestOptions.Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp10))
         .WithAllowedCompilerDiagnosticIds(new[] { "CS0414" });
 
-    public DiagnosticDescriptor Descriptor { get; } = DiagnosticRules.PoliteCodeMakesEveryoneHappier;
+    public override DiagnosticDescriptor Descriptor { get; } = DiagnosticRules.PoliteCodeMakesEveryoneHappier;
 
     [Fact]
     public async Task ShouldReportWordInClassNameAsync() {

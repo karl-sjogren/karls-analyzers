@@ -2,13 +2,13 @@
 
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp.Testing;
-using Microsoft.CodeAnalysis.Testing.Verifiers;
+using Microsoft.CodeAnalysis.Testing;
 
 namespace Karls.Analyzers.Tests.RoslynUtils;
 
 public static partial class CSharpCodeRefactoringVerifier<TCodeRefactoring>
     where TCodeRefactoring : CodeRefactoringProvider, new() {
-    public class Test : CSharpCodeRefactoringTest<TCodeRefactoring, XUnitVerifier> {
+    public class Test : CSharpCodeRefactoringTest<TCodeRefactoring, DefaultVerifier> {
         public Test() {
             SolutionTransforms.Add((solution, projectId) => {
                 var compilationOptions = solution.GetProject(projectId).CompilationOptions;
