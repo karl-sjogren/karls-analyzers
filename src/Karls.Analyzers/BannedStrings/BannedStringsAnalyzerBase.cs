@@ -23,10 +23,10 @@ public abstract class BannedStringsAnalyzerBase : DiagnosticAnalyzer {
         context.EnableConcurrentExecution();
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
-        context.RegisterSyntaxNodeAction(f => CheckStringLiteralTokens(f, context), SyntaxKind.StringLiteralExpression);
+        context.RegisterSyntaxNodeAction(f => CheckStringLiteralTokens(f, context), SyntaxKind.StringLiteralExpression, SyntaxKind.InterpolatedStringExpression);
     }
 
-    private void CheckAndReportContent(Action<Diagnostic> reportDiagnostic, BannedStringWithReplacement[] terms, Location location, string content) {
+    private void CheckAndReportContent(Action<Diagnostic> reportDiagnostic, BannedStringWithReplacement[] terms, Location location, string nodeText, string content) {
         var matchingTerm = GetMatchingTerms(content, terms);
         if(matchingTerm is null) {
             return;
@@ -36,26 +36,35 @@ public abstract class BannedStringsAnalyzerBase : DiagnosticAnalyzer {
             descriptor: DiagnosticDescriptor,
             location: location,
             properties: new Dictionary<string, string?> { ["Constant"] = matchingTerm.Replacement }.ToImmutableDictionary(),
-            messageArgs: [content, matchingTerm.Replacement]));
+            messageArgs: [nodeText, matchingTerm.Replacement]));
     }
 
     private void CheckStringLiteralTokens(SyntaxNodeAnalysisContext context, AnalysisContext analysisContext) {
-        var node = context.Node as LiteralExpressionSyntax;
+        var literalNode = context.Node as LiteralExpressionSyntax;
+        var interpolatedNode = context.Node as InterpolatedStringExpressionSyntax;
 
-        if(node is null) {
+        if(literalNode is null && interpolatedNode is null) {
             return;
         }
 
-        if(IsConstant(node)) {
+        if(IsConstant(literalNode) || IsConstant(interpolatedNode)) {
             return;
         }
 
         var terms = GetConfiguredTerms(analysisContext, context.Options.AdditionalFiles);
 
-        CheckAndReportContent(context.ReportDiagnostic, terms, node.GetLocation(), node.Token.Text);
+        if(literalNode is not null) {
+            CheckAndReportContent(context.ReportDiagnostic, terms, literalNode.GetLocation(), literalNode.Token.Text, literalNode.Token.ValueText);
+        } else if(interpolatedNode is not null) {
+            CheckAndReportContent(context.ReportDiagnostic, terms, interpolatedNode.GetLocation(), interpolatedNode.ToFullString(), interpolatedNode.Contents.ToString());
+        }
     }
 
-    private static bool IsConstant(LiteralExpressionSyntax node) {
+    private static bool IsConstant(ExpressionSyntax? node) {
+        if(node is null) {
+            return false;
+        }
+
         var fieldDeclaration = node.FirstAncestorOrSelf<FieldDeclarationSyntax>();
         if(fieldDeclaration is null) {
             return false;
@@ -65,7 +74,7 @@ public abstract class BannedStringsAnalyzerBase : DiagnosticAnalyzer {
     }
 
     private static BannedStringWithReplacement? GetMatchingTerms(string content, BannedStringWithReplacement[] terms) {
-        return terms.FirstOrDefault(term => content.IndexOf(term.Term, StringComparison.InvariantCultureIgnoreCase) >= 0);
+        return terms.FirstOrDefault(term => content.Equals(term.Term, StringComparison.InvariantCultureIgnoreCase));
     }
 
     protected BannedStringWithReplacement[] GetConfiguredTerms(AnalysisContext context, ImmutableArray<AdditionalText> additionalFiles) {

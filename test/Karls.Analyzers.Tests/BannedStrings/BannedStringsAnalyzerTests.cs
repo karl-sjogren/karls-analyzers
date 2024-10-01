@@ -176,6 +176,7 @@ public class MyClass {
         sb.AppendLine("Bear;Constants.Animals.Bear");
         sb.AppendLine("Elephant;Constants.Animals.Elephant");
         sb.AppendLine("Fish;Constants.Animals.Fish");
+        sb.AppendLine("Liger;Constants.Animals.Liger");
 
         var test = new VerifyCS.Test {
             TestState =
@@ -190,6 +191,11 @@ public class MyClass {
 
     public string Lion { get; } = [|"Lion"|];
     public string Tiger { get { return [|"Tiger"|]; } }
+
+    public string LiteralLiger => [|"Liger"|];
+    public string TemplateLiger => [|$"Liger"|];
+    public string VerbatimLiger => [|@"Liger"|];
+    public string VerbatimTemplateLiger => [|@$"Liger"|];
 
     public string GetBear() {
         return [|"Bear"|];
