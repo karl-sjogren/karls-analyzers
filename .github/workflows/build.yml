@@ -51,13 +51,13 @@ jobs:
     - name: Test analyzer solution
       run: dotnet test Karls.Analyzers.sln --configuration Release
 
-    - name: Setup timestamp
+    - name: Pack analyzer project
       if: github.ref != 'refs/heads/main'
-      id: timestamp
-      run: echo "value=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
+      run: dotnet pack src/Karls.Analyzers/Karls.Analyzers.csproj --configuration Release --output ./artifacts --version-suffix $(date +'%Y-%m-%d-%H-%M-%S')
 
     - name: Pack analyzer project
-      run: dotnet pack src/Karls.Analyzers/Karls.Analyzers.csproj --configuration Release --output ./artifacts --version-suffix ${{ steps.timestamp.outputs.value }}
+      if: github.ref == 'refs/heads/main'
+      run: dotnet pack src/Karls.Analyzers/Karls.Analyzers.csproj --configuration Release --output ./artifacts
 
     - name: Upload packages
       uses: actions/upload-artifact@v4
