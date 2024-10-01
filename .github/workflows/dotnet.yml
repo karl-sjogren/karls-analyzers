@@ -91,7 +91,7 @@ jobs:
 
   publish:
     name: NuGet Publish
-    needs: integration-tests
+    needs: net-build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
