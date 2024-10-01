@@ -156,6 +156,9 @@ public class MyClass {
             TestState =
             {
                 Sources = { """
+using System.Collections.Generic;
+using System.Linq;
+
 public class MyClass {
     public string _myString => [|"DoNotUseMe"|];
     public string Zebra => [|"Zebra"|];
@@ -168,6 +171,10 @@ public class MyClass {
     }
 
     public IEnumerable<string> FilterElephants => GetAnimals().Where(a => a == [|"Elephant"|]);
+
+    public string[] GetAnimals() {
+        return new [] { "Fish" };
+    }
 }
 
 """ },
