@@ -54,7 +54,7 @@ jobs:
     - name: Setup timestamp
       if: github.ref != 'refs/heads/main'
       id: timestamp
-      run: echo "::set-output name=value::$(date +'%Y-%m-%d-%H-%M-%S')"
+      run: echo "{value}={$(date +'%Y-%m-%d-%H-%M-%S')}" >> $GITHUB_OUTPUT
 
     - name: Pack analyzer project
       run: dotnet pack src/Karls.Analyzers/Karls.Analyzers.csproj --configuration Release --output ./artifacts --version-suffix ${{ steps.timestamp.outputs.value }}
