@@ -24,7 +24,7 @@ public class Block {
     public virtual string Prop2 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode), @"
+".ToDiagnosticsData(OptimizelySetupCode), @"
 using System.ComponentModel.DataAnnotations;
 using EPiServer.DataAnnotations;
 
@@ -55,7 +55,7 @@ public class Block {
     public virtual string Prop2 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode), @"
+".ToDiagnosticsData(OptimizelySetupCode), @"
 using System.ComponentModel.DataAnnotations;
 using EPiServer.DataAnnotations;
 

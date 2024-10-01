@@ -7,7 +7,8 @@ namespace Karls.Analyzers.Tests.Optimizely;
 public abstract class OptimizelyAnalyzerTestBase<TAnalyzer, TFixProvider> : XunitDiagnosticVerifier<TAnalyzer, TFixProvider>
         where TAnalyzer : DiagnosticAnalyzer, new()
         where TFixProvider : CodeFixProvider, new() {
-    public string OptimizelySetupCode { get; } = @"
+    public string OptimizelySetupCode { get; } = """
+
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,7 +30,7 @@ namespace EPiServer.DataAnnotations {
 }
 
 public static class SystemTabNames {
-    public const string Content = ""Information"";
+    public const string Content = "Information";
 }
 
 public class BlockData {
@@ -37,5 +38,6 @@ public class BlockData {
 
 public class Url {
 }
-";
+
+""";
 }

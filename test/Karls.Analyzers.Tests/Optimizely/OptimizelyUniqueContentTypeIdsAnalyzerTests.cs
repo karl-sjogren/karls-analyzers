@@ -22,7 +22,7 @@ public class Block1 {
 public class Block2 {
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact(Skip = "I can't get this working with diagnostics being reported in AdditionalFiles.")]
@@ -41,7 +41,7 @@ using EPiServer.DataAnnotations;
 public class Block1 {
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode, secondaryCode));
+".ToDiagnosticsData(OptimizelySetupCode, secondaryCode));
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class Block1 {
 public class Block2 {
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class Block1 {
 public class Block2 {
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode), @"
+".ToDiagnosticsData(OptimizelySetupCode), @"
 using EPiServer.DataAnnotations;
 
 [ContentType(GUID = ""00000000-0000-0000-0000-000000000001"")]

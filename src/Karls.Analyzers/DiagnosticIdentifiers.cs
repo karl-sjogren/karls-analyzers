@@ -14,4 +14,10 @@ public static class DiagnosticIdentifiers {
     public const string InclusiveCodeMakesEveryoneHappier = "KP0002";
 
     #endregion
+
+    #region Banend strings
+
+    public const string UsePredefinedConstInsteadOfString = "KBS001";
+
+    #endregion
 }

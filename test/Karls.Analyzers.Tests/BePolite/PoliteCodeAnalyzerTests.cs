@@ -9,7 +9,7 @@ namespace Karls.Analyzers.Tests.BePolite;
 public class PoliteCodeAnalyzerTests : XunitDiagnosticVerifier<PoliteCodeAnalyzer, NoopCodeFixProvider> {
     public override CSharpTestOptions Options => CSharpTestOptions.Default
         .WithParseOptions(CSharpTestOptions.Default.ParseOptions.WithLanguageVersion(LanguageVersion.CSharp10))
-        .WithAllowedCompilerDiagnosticIds(new[] { "CS0414" });
+        .WithAllowedCompilerDiagnosticIds(["CS0414"]);
 
     public override DiagnosticDescriptor Descriptor { get; } = DiagnosticRules.PoliteCodeMakesEveryoneHappier;
 
@@ -19,7 +19,7 @@ public class PoliteCodeAnalyzerTests : XunitDiagnosticVerifier<PoliteCodeAnalyze
 public class [|StupidComponent|] {
 }
 
-".ToDiagnosticsData(Descriptor));
+".ToDiagnosticsData());
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class NiceComponent {
     public string [|StupidProperty|] { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor));
+".ToDiagnosticsData());
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class NiceComponent {
     private string [|_stupidField|] = ""Nice"";
 }
 
-".ToDiagnosticsData(Descriptor));
+".ToDiagnosticsData());
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public enum [|StupidEnum|] {
     Nice = 1
 }
 
-".ToDiagnosticsData(Descriptor));
+".ToDiagnosticsData());
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public enum NiceEnum {
     [|Stupid|] = 1
 }
 
-".ToDiagnosticsData(Descriptor));
+".ToDiagnosticsData());
     }
 
     [Fact]

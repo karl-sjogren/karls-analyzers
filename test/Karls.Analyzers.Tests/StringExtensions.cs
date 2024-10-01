@@ -3,22 +3,22 @@
 namespace Karls.Analyzers.Tests;
 
 public static class StringExtensions {
-    public static DiagnosticTestData ToDiagnosticsData(this string source, DiagnosticDescriptor descriptor) {
-        return source.ToDiagnosticsData(descriptor, [], []);
+    public static DiagnosticTestData ToDiagnosticsData(this string source) {
+        return source.ToDiagnosticsData([], []);
     }
 
-    public static DiagnosticTestData ToDiagnosticsData(this string source, DiagnosticDescriptor descriptor, params string[] additionalCode) {
-        return source.ToDiagnosticsData(descriptor, [], additionalCode);
+    public static DiagnosticTestData ToDiagnosticsData(this string source, params string[] additionalCode) {
+        return source.ToDiagnosticsData([], additionalCode);
     }
 
-    public static DiagnosticTestData ToDiagnosticsData(this string source, DiagnosticDescriptor descriptor, params AdditionalFile[] additionalFiles) {
-        return source.ToDiagnosticsData(descriptor, additionalFiles, []);
+    public static DiagnosticTestData ToDiagnosticsData(this string source, params AdditionalFile[] additionalFiles) {
+        return source.ToDiagnosticsData(additionalFiles, []);
     }
 
-    public static DiagnosticTestData ToDiagnosticsData(this string source, DiagnosticDescriptor descriptor, AdditionalFile[] additionalFiles, string[] additionalCode) {
+    public static DiagnosticTestData ToDiagnosticsData(this string source, AdditionalFile[] additionalFiles, string[] additionalCode) {
         var code = TestCode.Parse(source);
 
-        var additionalCodeFiles = additionalCode?.Select(c => new AdditionalFile(c)) ?? Enumerable.Empty<AdditionalFile>();
+        var additionalCodeFiles = additionalCode?.Select(c => new AdditionalFile(c)) ?? [];
 
         var data = new DiagnosticTestData(
             code.Value,

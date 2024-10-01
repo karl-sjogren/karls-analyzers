@@ -53,5 +53,20 @@ public static class DiagnosticRules {
 
     #endregion
 
+    #region Banned strings
+
+    public static readonly DiagnosticDescriptor UsePredefinedConstInsteadOfString = new(
+            id: DiagnosticIdentifiers.UsePredefinedConstInsteadOfString,
+            title: "Use the predefined constant instead of a string",
+            messageFormat: "The literal string {0} should not be used in this project. Use the predefined constant {1} instead.",
+            category: "BePolite",
+            defaultSeverity: DiagnosticSeverity.Info,
+            isEnabledByDefault: false,
+            description: null,
+            helpLinkUri: GetHelpUrl(DiagnosticIdentifiers.UsePredefinedConstInsteadOfString),
+            customTags: []);
+
+    #endregion
+
     private static string GetHelpUrl(string diagnosticId) => $"https://github.com/karl-sjogren/karls-analyzers/blob/main/docs/analyzers/{diagnosticId}.md";
 }

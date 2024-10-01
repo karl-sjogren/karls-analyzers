@@ -24,7 +24,7 @@ public class Block {
     public virtual string Prop1 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class Block {
     public virtual string Prop1 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class Block {
     public virtual string Prop2 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class Block {
     public virtual string Prop3 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public class ButtonBlock : BlockData {
     public virtual string BadComponent { get; set; } = string.Empty;
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class Block {
     public virtual string Prop2 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 
     [Fact]
@@ -147,6 +147,6 @@ public class Block {
     public virtual string Prop1 { get; set; }
 }
 
-".ToDiagnosticsData(Descriptor, OptimizelySetupCode));
+".ToDiagnosticsData(OptimizelySetupCode));
     }
 }
