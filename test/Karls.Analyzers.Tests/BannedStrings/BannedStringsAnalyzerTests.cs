@@ -1,3 +1,4 @@
+using System.Text;
 using Karls.Analyzers.BannedStrings;
 using Roslynator.Testing.CSharp;
 using Roslynator.Testing.CSharp.Xunit;
@@ -45,7 +46,25 @@ public class MyClass {
             {
                 Sources = { """
 public class MyClass {
-    private string myString = [|"DoNotUseMe"|];
+    private string _myString = [|"DoNotUseMe"|];
+}
+
+""" },
+                AdditionalFiles = { ("BannedStrings.txt", "DoNotUseMe;Constants.UseThisInstead") }
+            }
+        };
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task ShouldReportStringInPublicGetterAsync() {
+        var test = new VerifyCS.Test {
+            TestState =
+            {
+                Sources = { """
+public class MyClass {
+    public string _myString => [|"DoNotUseMe"|];
 }
 
 """ },
@@ -102,7 +121,7 @@ public class Constants {
 }
 
 public class MyClass {
-    private string myString = [|"DoNotUseMe"|];
+    private string _myString = [|"DoNotUseMe"|];
 }
 
 """ },
@@ -114,10 +133,46 @@ public class Constants {
 }
 
 public class MyClass {
-    private string myString = Constants.UseThisInstead;
+    private string _myString = Constants.UseThisInstead;
 }
 
 """
+        };
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task ShouldFindMultipleInstancesOfBannedStringsAsync() {
+        var sb = new StringBuilder();
+        sb.AppendLine("DoNotUseMe;Constants.UseThisInstead");
+        sb.AppendLine("Zebra;Constants.Animals.Zebra");
+        sb.AppendLine("Lion;Constants.Animals.Lion");
+        sb.AppendLine("Tiger;Constants.Animals.Tiger");
+        sb.AppendLine("Bear;Constants.Animals.Bear");
+        sb.AppendLine("Elephant;Constants.Animals.Elephant");
+
+        var test = new VerifyCS.Test {
+            TestState =
+            {
+                Sources = { """
+public class MyClass {
+    public string _myString => [|"DoNotUseMe"|];
+    public string Zebra => [|"Zebra"|];
+
+    public string Lion { get; } = [|"Lion"|];
+    public string Tiger { get { return [|"Tiger"|]; } }
+
+    public string GetBear() {
+        return [|"Bear"|];
+    }
+
+    public IEnumerable<string> FilterElephants => GetAnimals().Where(a => a == [|"Elephant"|]);
+}
+
+""" },
+                AdditionalFiles = { ("BannedStrings.txt", sb.ToString()) }
+            }
         };
 
         await test.RunAsync();

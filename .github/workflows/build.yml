@@ -86,7 +86,7 @@ jobs:
 
     - name: Add timestamp to packages
       run: |
-        for f in ./artifacts/*.nupkg; do mv -- "$f" "$f-$(stat -c %Y "$f" | date +'%Y-%m-%d-%H-%M-%S')"; done
+        for file in ./artifacts/*.nupkg; do ext="${file##*.}"; filename="${file%.*}"; mv "$file" "${filename}-$(date +'%Y-%m-%d-%H-%M-%S').${ext}"; done
 
     - name: Setup nuget registry
       run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/karl-sjogren/index.json"
