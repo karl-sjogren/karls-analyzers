@@ -151,6 +151,7 @@ public class MyClass {
         sb.AppendLine("Tiger;Constants.Animals.Tiger");
         sb.AppendLine("Bear;Constants.Animals.Bear");
         sb.AppendLine("Elephant;Constants.Animals.Elephant");
+        sb.AppendLine("Fish;Constants.Animals.Fish");
 
         var test = new VerifyCS.Test {
             TestState =
@@ -173,7 +174,7 @@ public class MyClass {
     public IEnumerable<string> FilterElephants => GetAnimals().Where(a => a == [|"Elephant"|]);
 
     public string[] GetAnimals() {
-        return new [] { "Fish" };
+        return new [] { [|"Fish"|] };
     }
 }
 
